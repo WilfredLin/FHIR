@@ -1,0 +1,67 @@
+class FHIRResource:
+    def __init__(self, resource_type, **kwargs):
+        """
+        Initialize a FHIR resource with the specified resource type and attributes.
+        
+        :param resource_type: The type of the FHIR resource (e.g., 'Patient', 'Observation')
+        :param kwargs: Additional attributes of the resource
+        """
+        self.resource_type = resource_type
+        self.attributes = kwargs
+
+    def to_dict(self):
+        """
+        Convert the FHIR resource to a dictionary representation.
+        
+        :return: Dictionary representation of the FHIR resource
+        """
+        resource_dict = {
+            "resourceType": self.resource_type,
+            **self.attributes
+        }
+        return resource_dict
+
+    def display(self):
+        """
+        Display the FHIR resource in a readable format.
+        """
+        import json
+        print(json.dumps(self.to_dict(), indent=2))
+
+
+class Patient(FHIRResource):
+    def __init__(self, id, name, birth_date=None, gender=None):
+        """
+        Initialize a Patient resource.
+        
+        :param id: The unique identifier for the patient
+        :param name: The name of the patient
+        :param birth_date: The birth date of the patient (optional)
+        :param gender: The gender of the patient (optional)
+        """
+        super().__init__('Patient', id=id, name=name, birthDate=birth_date, gender=gender)
+
+
+class Observation(FHIRResource):
+    def __init__(self, id, status, code, subject, value=None):
+        """
+        Initialize an Observation resource.
+        
+        :param id: The unique identifier for the observation
+        :param status: The status of the observation
+        :param code: The code representing the observation
+        :param subject: The subject of the observation (e.g., patient)
+        :param value: The value of the observation (optional)
+        """
+        super().__init__('Observation', id=id, status=status, code=code, subject=subject, value=value)
+
+
+# Example usage
+if __name__ == '__main__':
+    # Create a Patient resource
+    patient = Patient(id="12345", name="John Doe", birth_date="1980-01-01", gender="male")
+    patient.display()
+
+    # Create an Observation resource
+    observation = Observation(id="obs1", status="final", code="blood-pressure", subject="12345", value="120/80")
+    observation.display()
